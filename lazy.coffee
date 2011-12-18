@@ -109,10 +109,7 @@ class LE.Get extends LazyEvaluator
 class LE.Program extends LazyEvaluator
 
 class LE.Block extends LazyEvaluator
-	passContext: (ctx)->
-		Ctx = ()->
-		Ctx.prototype = ctx
-		@context = new Ctx
+	contextType: 'local'
 
 
 exports.LazyEvaluator = LazyEvaluator
