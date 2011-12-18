@@ -105,6 +105,11 @@ class LE.Get extends LazyEvaluator
 		[name] = @results
 		@return @context[name]
 
+class LE.Sleep extends LazyEvaluator
+	maxArgs: 1
+	onEnd: ()->
+		setTimeout (()=>@return null), @results[0]
+
 
 class LE.Program extends LazyEvaluator
 
