@@ -92,8 +92,27 @@ class LE.Show extends LazyEvaluator
 		console.log.apply console, @results 
 		@return null
 
+class LE.Set extends LazyEvaluator
+	maxArgs: 2
+	onEnd: ()->
+		[name, value] = @results
+		@context[name] = value
+		@return value
+
+class LE.Get extends LazyEvaluator
+	maxArgs: 1
+	onEnd: ()->
+		[name] = @results
+		@return @context[name]
+
+
 class LE.Program extends LazyEvaluator
 
+class LE.Block extends LazyEvaluator
+	passContext: (ctx)->
+		Ctx = ()->
+		Ctx.prototype = ctx
+		@context = new Ctx
 
 
 exports.LazyEvaluator = LazyEvaluator
