@@ -132,11 +132,9 @@ class LE.If extends LazyEvaluator
 	onArg:(pass)->
 		switch @currentArg
 			when 1
-				if @results[0]
-					pass()
-				else
+				unless @results[0]
 					@currentArg++
-					pass()
+				pass()
 			when 2
 				@onEnd() if @results[0]
 			when 3
