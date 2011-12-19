@@ -36,7 +36,7 @@ class LazyEvaluator
 		@return = ret
 		@results = []
 		@currentArg = 0
-		@onStart ret
+		@onStart()
 
 LE = {}
 LazyEvaluator.buildFromAst = (ast)->
@@ -81,6 +81,27 @@ class LE.Multiply extends LazyEvaluator
 		else
 			pass()
 
+class LE.Gt extends LazyEvaluator
+	maxArgs: 2
+	onEnd: -> @return @results[0] > @results[1]
+
+class LE.Ge extends LazyEvaluator
+	maxArgs: 2
+	onEnd: -> @return @results[0] >= @results[1]
+
+class LE.Lt extends LazyEvaluator
+	maxArgs: 2
+	onEnd: -> @return @results[0] < @results[1]
+
+class LE.Le extends LazyEvaluator
+	maxArgs: 2
+	onEnd: -> @return @results[0] <= @results[1]
+
+class LE.Not extends LazyEvaluator
+	maxArgs: 1
+	onEnd: -> @return !@results[0]
+
+
 class LE.Show extends LazyEvaluator
 	onEnd: ->
 		console.log.apply console, @results 
@@ -103,11 +124,47 @@ class LE.Sleep extends LazyEvaluator
 	maxArgs: 1
 	onEnd: -> setTimeout (()=>@return null), @results[0]
 
+class LE.If extends LazyEvaluator
+	maxArgs: 3
+	onEnd: ->
+		@return @results[1]
+
+	onArg:(pass)->
+		switch @currentArg
+			when 1
+				if @results[0]
+					pass()
+				else
+					@currentArg++
+					pass()
+			when 2
+				@onEnd() if @results[0]
+			when 3
+				@onEnd()
+
+class LE.While extends LazyEvaluator
+	maxArgs: 2
+	onEnd: ->
+		@return @results[1]
+	onArg:(pass)->
+		switch @currentArg
+			when 1
+				unless @results[0]
+					@onEnd()
+				else pass()
+			when 2
+				@results = []
+				@currentArg = 0
+				pass()
+
 
 class LE.Program extends LazyEvaluator
 
 class LE.Block extends LazyEvaluator
 	contextType: 'local'
+
+class LE.Group extends LazyEvaluator
+	contextType: 'global'
 
 
 exports.LazyEvaluator = LazyEvaluator
