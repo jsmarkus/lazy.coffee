@@ -1,5 +1,4 @@
-{LazyEvaluator, LE} = require './lazy.coffee'
-
+{LazyEvaluator, LE} = require '..'
 
 le = LazyEvaluator.buildFromAst [
 		'Program',
