@@ -7,16 +7,13 @@ class LazyEvaluator
 
 	maxArgs: false
 
-	onStart:()->
-		@nextArg()
+	onStart: ->	@nextArg()
 
-	onArg:(pass)->
-		pass()
+	onArg: (pass)-> pass()
 
-	onEnd:()->
-		@return @results
+	onEnd: -> @return @results
 
-	nextArg: ()->
+	nextArg: ->
 		if @currentArg >= @args.length or (@maxArgs isnt false and @currentArg >= @maxArgs)
 			@onEnd()
 		else
@@ -56,8 +53,7 @@ LazyEvaluator.buildFromAst = (ast)->
 	result
 
 class LE.Constant extends LazyEvaluator
-	onStart: ()->
-		@return @args[0]
+	onStart: -> @return @args[0]
 
 class LE.Plus extends LazyEvaluator
 	onEnd: ()->
@@ -67,16 +63,14 @@ class LE.Plus extends LazyEvaluator
 
 class LE.Minus extends LazyEvaluator
 	maxArgs: 2
-	onEnd: ()->
-		@return @results[0] - @results[1]
+	onEnd: -> @return @results[0] - @results[1]
 
 class LE.Divide extends LazyEvaluator
 	maxArgs: 2
-	onEnd: ()->
-		@return @results[0] / @results[1]
+	onEnd: -> @return @results[0] / @results[1]
 
 class LE.Multiply extends LazyEvaluator
-	onEnd: ()->
+	onEnd: ->
 		prod = @results[0]
 		prod *= res for res in @results[1..]
 		@return prod
@@ -88,27 +82,26 @@ class LE.Multiply extends LazyEvaluator
 			pass()
 
 class LE.Show extends LazyEvaluator
-	onEnd: ()->
+	onEnd: ->
 		console.log.apply console, @results 
 		@return null
 
 class LE.Set extends LazyEvaluator
 	maxArgs: 2
-	onEnd: ()->
+	onEnd: ->
 		[name, value] = @results
 		@context[name] = value
 		@return value
 
 class LE.Get extends LazyEvaluator
 	maxArgs: 1
-	onEnd: ()->
+	onEnd: ->
 		[name] = @results
 		@return @context[name]
 
 class LE.Sleep extends LazyEvaluator
 	maxArgs: 1
-	onEnd: ()->
-		setTimeout (()=>@return null), @results[0]
+	onEnd: -> setTimeout (()=>@return null), @results[0]
 
 
 class LE.Program extends LazyEvaluator
