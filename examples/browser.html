@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<script src="../lazy.coffee.js"></script>
+<script>
+(function() {
+  var le, le2, le3;
+
+  le = LazyEvaluator.buildFromAst(['Program', ['Show', '====Arithmetics'], ['Show', ['Minus', 2, 6]], ['Show', ['Plus', 2, 6, 10, 91]], ['Show', ['Multiply', 2, 6, 10, 7]], ['Show', ['Divide', 2, 6]]]);
+
+  le.eval(function(result) {});
+
+  le2 = LazyEvaluator.buildFromAst(['Program', ['Show', '====Block visibility'], ['Set', 'a', 'foo'], ['Show', ['Get', 'a']], ['Block', ['Set', 'a', 'bar'], ['Show', ['Get', 'a']]], ['Show', ['Get', 'a']]]);
+
+  le2.eval(function(result) {});
+
+  le3 = LazyEvaluator.buildFromAst(['Program', ['Show', '====Sleep function'], ['Show', 'Hello'], ['Sleep', 2000], ['Show', 'World']]);
+
+  le3.eval(function(result) {});
+
+}).call(this);
+
+</script>
